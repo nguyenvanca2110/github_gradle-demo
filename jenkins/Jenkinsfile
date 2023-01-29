@@ -8,7 +8,8 @@ pipeline{
 	}
 
 	environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub_canv2110')
+		DOCKERHUB_CREDENTIALS=credentials('ACR_Gradle_Application')
+
 		//COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short=4 HEAD').trim()
         //BRANCH = "${env.GIT_BRANCH}"
         //TAG = "${env.BRANCH}.${env.BUILD_NUMBER}".drop(15)
@@ -47,6 +48,16 @@ pipeline{
 				sh 'docker push canv2110/gradle_demo:$BUILD_NUMBER'
 			}
 		}
+
+		stage('Gradle K8S Deploy') {
+		    steps{
+		        script {
+		            withKubeConfig([credentialsId: 'kubeconfig-raw', serverUrl: '']) {
+                        sh ('kubectl apply -f k8s-deployment.yaml')
+                    }
+                }
+            }
+        }
 	}
 
 	post {
