@@ -3,7 +3,8 @@ pipeline{
 	agent any
 
 	tools {
-	    gradle 
+	    gradle 'Gradle_8.0'
+	    java 'JDK11'
 	}
 
 	environment {
@@ -17,9 +18,23 @@ pipeline{
 
 	stages {
 
+        stage('Gradle build image') {
+        	steps {
+        		sh 'cd ../'
+        		sh './gradlew clean'
+        		sh './gradle build'
+        	}
+        }
+
+        stage('Docker build image') {
+        			steps {
+        				sh 'docker build -t canv2110/gradle_demo:$BUILD_NUMBER .'
+        			}
+        		}
+
         stage('Docker build image') {
 			steps {
-				sh 'docker build -t canv2110/nodeapp_app:$BUILD_TIMESTAMP .'
+				sh 'docker build -t canv2110/gradle_demo:$BUILD_NUMBER .'
 			}
 		}
 
@@ -33,7 +48,7 @@ pipeline{
 
 		stage('Docker image push') {
 			steps {
-				sh 'docker push canv2110/nodeapp_app:$BUILD_TIMESTAMP'
+				sh 'docker push canv2110/gradle_demo:$BUILD_NUMBER'
 			}
 		}
 	}
