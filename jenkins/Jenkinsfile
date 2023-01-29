@@ -4,7 +4,7 @@ pipeline{
 
 	tools {
 	    gradle 'Gradle_8.0'
-	    java 'JDK11'
+	    jdk 'JDK11'
 	}
 
 	environment {
@@ -27,10 +27,10 @@ pipeline{
         }
 
         stage('Docker build image') {
-        			steps {
-        				sh 'docker build -t canv2110/gradle_demo:$BUILD_NUMBER .'
-        			}
-        		}
+            steps {
+                sh 'docker build -t canv2110/gradle_demo:$BUILD_NUMBER .'
+        	}
+        }
 
         stage('Docker build image') {
 			steps {
