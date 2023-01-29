@@ -32,12 +32,6 @@ pipeline{
         	}
         }
 
-        stage('Docker build image') {
-			steps {
-				sh 'docker build -t canv2110/gradle_demo:$BUILD_NUMBER .'
-			}
-		}
-
 		stage('Docker Hub Login') {
 			steps {
 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW'
