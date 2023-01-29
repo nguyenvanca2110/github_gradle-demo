@@ -4,7 +4,7 @@ pipeline{
 
 	tools {
 	    gradle 'Gradle_8.0'
-	    jdk 'JDK11'
+	    jdk 'JDK17'
 	}
 
 	environment {
@@ -20,9 +20,11 @@ pipeline{
 
         stage('Gradle build image') {
         	steps {
-        		sh 'cd ../'
+        	    sh 'echo $PWD'
+        		sh 'cd ..'
+        		sh 'echo $PWD'
         		sh './gradlew clean'
-        		sh './gradle build'
+        		sh './gradlew build'
         	}
         }
 
