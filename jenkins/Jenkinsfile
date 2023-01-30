@@ -41,7 +41,7 @@ pipeline{
 			steps {
 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW'
 				//sh 'echo $BRANCH'   sh 'echo $TAG' sh 'echo $DEV_TAG'
-				docker login $ACR_LSE_POC_URL -u $POC_ACR_CREDENTIALS_USR -p $POC_ACR_CREDENTIALS_PSW
+				sh 'docker login $ACR_LSE_POC_URL -u $POC_ACR_CREDENTIALS_USR -p $POC_ACR_CREDENTIALS_PSW'
 				// sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
 			}
 		}
