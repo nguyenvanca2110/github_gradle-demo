@@ -55,9 +55,9 @@ pipeline{
 		stage('Gradle K8S Deploy') {
 		    steps{
 		        script {
-		            withKubeConfig([credentialsId: 'VIEN_AZURE_AKS', serverUrl: '']) {
+		            //withKubeConfig([credentialsId: 'VIEN_AZURE_AKS', serverUrl: '']) {
                         sh ('kubectl apply -f aks_deployment/aks-namespace.yml')
-                    }
+                    //}
                 }
             }
         }
@@ -65,6 +65,10 @@ pipeline{
 
 	post {
 		always {
+			sh 'docker images'
+			sh 'docker image prune -f --filter="dangling=true"'
+			sh 'docker rmi -f $ACR_GRADLE_DEMO_URL/$ACR_GRADLE_DEMO/$APPLICATION_NAME:$BUILD_NUMBER'
+			sh 'docker images'
 			sh 'docker logout'
 		}
 	}
