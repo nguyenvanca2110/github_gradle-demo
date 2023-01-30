@@ -52,15 +52,15 @@ pipeline{
 			}
 		}
 
-		stage('Gradle K8S Deploy') {
-		    steps{
-		        script {
-		            withKubeConfig([credentialsId: 'kubeconfig-raw', serverUrl: '']) {
-                        sh ('kubectl apply -f k8s-deployment.yaml')
-                    }
-                }
-            }
-        }
+		// stage('Gradle K8S Deploy') {
+		//     steps{
+		//         script {
+		//             withKubeConfig([credentialsId: 'kubeconfig-raw', serverUrl: '']) {
+        //                 sh ('kubectl apply -f k8s-deployment.yaml')
+        //             }
+        //         }
+        //     }
+        // }
 	}
 
 	post {
