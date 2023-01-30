@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gradle-demo-metadata
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gradle-demo-app
+  template:
+    metadata:
+      labels:
+        app: gradle-demo-app
+    spec:
+      containers:
+      - name: gradle-demo-container
+        image: lsepocacr.azurecr.io/lsepocacr:15
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 8081
