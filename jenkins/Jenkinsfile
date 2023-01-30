@@ -9,7 +9,9 @@ pipeline{
 
 	environment {
 		DOCKERHUB_CREDENTIALS=credentials('ACR_Gradle_Application')
-
+		ACR_GRADLE_DEMO_URL = "lsedemoacr.azurecr.io"
+		ACR_GRADLE_DEMO = "lsedemoacr"
+		APPLICATION_NAME = "gradle_demo"
 		//COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short=4 HEAD').trim()
         //BRANCH = "${env.GIT_BRANCH}"
         //TAG = "${env.BRANCH}.${env.BUILD_NUMBER}".drop(15)
@@ -22,8 +24,8 @@ pipeline{
         stage('Gradle build image') {
         	steps {
         	    sh 'echo $PWD'
-        		sh 'cd ..'
-        		sh 'echo $PWD'
+        		// sh 'cd ..'
+        		// sh 'echo $PWD'
         		sh './gradlew clean'
         		sh './gradlew build'
         	}
@@ -31,7 +33,7 @@ pipeline{
 
         stage('Docker build image') {
             steps {
-                sh 'docker build -t canv2110/gradle_demo:$BUILD_NUMBER .'
+                sh 'docker build -t $ACR_LSE_POC_URL/$APPLICATION_NAME:$BUILD_NUMBER .'
         	}
         }
 
@@ -39,13 +41,14 @@ pipeline{
 			steps {
 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW'
 				//sh 'echo $BRANCH'   sh 'echo $TAG' sh 'echo $DEV_TAG'
-				sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+				docker login $ACR_LSE_POC_URL -u $POC_ACR_CREDENTIALS_USR -p $POC_ACR_CREDENTIALS_PSW
+				// sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
 			}
 		}
 
-		stage('Docker image push') {
+		stage('Docker Image Push') {
 			steps {
-				sh 'docker push canv2110/gradle_demo:$BUILD_NUMBER'
+				sh 'docker push $ACR_LSE_POC_URL/$APPLICATION_NAME:$BUILD_NUMBER'
 			}
 		}
 
