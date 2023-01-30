@@ -33,7 +33,7 @@ pipeline{
 
         stage('Docker build image') {
             steps {
-                sh 'docker build -t $ACR_LSE_POC_URL/$APPLICATION_NAME:$BUILD_NUMBER .'
+                sh 'docker build -t $ACR_GRADLE_DEMO_URL/$ACR_GRADLE_DEMO/$APPLICATION_NAME:$BUILD_NUMBER .'
         	}
         }
 
@@ -41,14 +41,14 @@ pipeline{
 			steps {
 				sh 'echo $DOCKERHUB_CREDENTIALS_PSW'
 				//sh 'echo $BRANCH'   sh 'echo $TAG' sh 'echo $DEV_TAG'
-				sh 'docker login $ACR_LSE_POC_URL -u $POC_ACR_CREDENTIALS_USR -p $POC_ACR_CREDENTIALS_PSW'
+				sh 'docker login $ACR_GRADLE_DEMO_URL -u $POC_ACR_CREDENTIALS_USR -p $POC_ACR_CREDENTIALS_PSW'
 				// sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
 			}
 		}
 
 		stage('Docker Image Push') {
 			steps {
-				sh 'docker push $ACR_LSE_POC_URL/$APPLICATION_NAME:$BUILD_NUMBER'
+				sh 'docker push $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER'
 			}
 		}
 
