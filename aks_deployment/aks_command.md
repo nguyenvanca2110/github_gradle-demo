@@ -81,6 +81,11 @@ kubectl create secret docker-registry lsepocnodejs-secret --namespace canv-aks-d
 # make 
 kubectl apply -f kube-manifests/
 
+# deploy a service in CLuster
+kubectl apply -f aks_deployment/aks-service-deployment.yml
+
+
+
 # List Pods
 kubectl get pods
 
