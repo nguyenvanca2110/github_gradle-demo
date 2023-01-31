@@ -57,6 +57,8 @@ pipeline{
 		        script {
 		            //withKubeConfig([credentialsId: 'AZURE_AKS', serverUrl: '']) {
                         sh ('kubectl apply -f aks_deployment/aks-namespace.yml')
+                        sh ('kubectl apply -f aks_deployment/aks-service-deployment.yml')
+                        sh ('kubectl apply -f aks_deployment/aks-application-deployment.yml')
                     //}
                 }
             }
