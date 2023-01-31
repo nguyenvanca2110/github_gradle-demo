@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: gradle-demo-lb
+  namespace: gradle-namespace
 spec:
   type: LoadBalancer
   ports:

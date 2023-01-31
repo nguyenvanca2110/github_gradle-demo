@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gradle-demo-metadata
+  name: gradle-demo-app
+  namespace: gradle-namespace
 spec:
   replicas: 2
   selector:
