@@ -5,8 +5,8 @@ az login
 
 export RESOURCE_GROUP='gradle-demo'
 export AKS_CLUSTER='gradle-cluster'
-export ACR_LSE_POC='gradledemoacr'
-export ACR_LSE_POC_URL='gradledemoacr.azurecr.io'
+export ACR_LSE_POC='gradleappacr'
+export ACR_LSE_POC_URL='gradleappacr.azurecr.io'
 
 echo $RESOURCE_GROUP
 echo $AKS_CLUSTER

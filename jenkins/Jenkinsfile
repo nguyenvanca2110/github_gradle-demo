@@ -8,9 +8,9 @@ pipeline{
 	}
 
 	environment {
-		ACR_CREDENTIALS=credentials('ACR_GRADLE_APPLICATION')
-		ACR_GRADLE_DEMO_URL = "gradledemoacr.azurecr.io"
-		ACR_GRADLE_DEMO = "gradledemoacr"
+		ACR_CREDENTIALS=credentials('KAKASHI_AZURE_ACR')
+		ACR_GRADLE_DEMO_URL = "gradleappacr.azurecr.io"
+		ACR_GRADLE_DEMO = "gradleappacr"
 		APPLICATION_NAME = "gradle_app"
 		//COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short=4 HEAD').trim()
         //BRANCH = "${env.GIT_BRANCH}"
@@ -55,7 +55,7 @@ pipeline{
 		stage('Gradle K8S Deploy') {
 		    steps{
 		        script {
-		            //withKubeConfig([credentialsId: 'VIEN_AZURE_AKS', serverUrl: '']) {
+		            //withKubeConfig([credentialsId: 'AZURE_AKS', serverUrl: '']) {
                         sh ('kubectl apply -f aks_deployment/aks-namespace.yml')
                     //}
                 }
