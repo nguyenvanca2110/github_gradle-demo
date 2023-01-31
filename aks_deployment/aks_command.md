@@ -4,7 +4,7 @@
 az login
 
 export RESOURCE_GROUP='gradle-demo'
-export AKS_CLUSTER='gradle-cluster'
+export AKS_CLUSTER='gradle-demo'
 export ACR_LSE_POC='gradledemoacr'
 export ACR_LSE_POC_URL='gradledemoacr.azurecr.io'
 
