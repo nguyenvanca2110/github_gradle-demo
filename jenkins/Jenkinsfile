@@ -57,6 +57,7 @@ pipeline{
                         sh ('kubectl apply -f aks_deployment/aks-namespace.yml')
                         sh ('kubectl apply -f aks_deployment/aks-service-deployment.yml')
                         sh ('kubectl apply -f aks_deployment/aks-application-deployment.yml')
+                        sh ('kubectl set image deployment/gradle-demo-app gradle-demo-container=$ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER --namespace gradle-namespace')
                     //}
                 }
             }
