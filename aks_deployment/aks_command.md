@@ -4,13 +4,14 @@
 az login
 
 export RESOURCE_GROUP='gradle-demo'
-export AKS_CLUSTER='ssh-gradlecluster'
+export AKS_CLUSTER='gradle-cluster'
 export ACR_NAME='gradleappacr'
 export ACR_URL='gradleappacr.azurecr.io'
 
+echo $AKS_NAMESPACE
+
 echo $RESOURCE_GROUP
 echo $AKS_CLUSTER
-echo $AKS_NAMESPACE
 echo $ACR_NAME
 echo $ACR_URL
 =================== Azure AKS ========================
@@ -18,7 +19,7 @@ echo $ACR_URL
 
 az aks create -n $AKS_CLUSTER -g $RESOURCE_GROUP --generate-ssh-keys --attach-acr $ACR_NAME
 # Attach using acr-name
-az aks update -n $AKS_CLUSTER -g $RESOURCE_GROUP --attach-acr <acr-name>
+az aks update -n $AKS_CLUSTER -g $RESOURCE_GROUP --attach-acr $ACR_NAME
 
 # Attach using acr-resource-id
 az aks update -n $AKS_CLUSTER -g $RESOURCE_GROUP --attach-acr <acr-resource-id>
@@ -151,3 +152,230 @@ az aks update -n aksdemo2 -g aks-rg2 --attach-acr $ACR_NAME
 
 
 ===================== Azure AKS Credential ===========
+
+export RESOURCE_GROUP='gradle-demo'
+export AKS_CLUSTER='gradle-cluster'
+export ACR_NAME='gradleappacr'
+export ACR_URL='gradleappacr.azurecr.io'
+
+echo $AKS_NAMESPACE
+
+echo $RESOURCE_GROUP
+echo $AKS_CLUSTER
+echo $ACR_NAME
+echo $ACR_URL
+
+
+1) Create an ACR instance:
+az acr create --name $ACR_NAME --resource-group $RESOURCE_GROUP --sku Basic
+
+2) Get the ACR login server:
+az acr show --name $ACR_NAME --query $ACR_URL
+
+3) Create a service principal for AKS:
+az ad sp create-for-rbac --skip-assignment
+
+4) Create an AKS cluster:
+az aks create --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --node-count 1 --generate-ssh-keys --service-principal 8bcfcc87-91b6-4e57-8093-7dc8930e478f --client-secret O7l8Q~wKkYNQmjbzHJVJHD1MnsIjFw48mGQzQc2Q
+
+5) Connect to the AKS cluster:
+az aks get-credentials --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER
+
+6) Grant ACR access to AKS:
+kubectl create clusterrolebinding acr-cluster-admin --clusterrole=cluster-admin --serviceaccount=kube-system:default
+/* Creates a cluster role binding in a Kubernetes cluster that grants cluster-admin privileges to the default service account in the kube-system namespace.
+
+In the context of an Azure Kubernetes Service (AKS) cluster integrated with an Azure Container Registry (ACR), this cluster role binding is necessary to allow the AKS cluster to access and pull images from ACR. The AKS cluster needs to have the proper permissions to perform this action, and the cluster role binding provides those permissions by granting the default service account in the kube-system namespace the highest level of privilege, cluster-admin.
+
+Without the cluster role binding, the AKS cluster would not be able to access ACR and the deployment of images from ACR to the AKS cluster would fail. */
+
+kubectl patch deploy --namespace kube-system tiller-deploy -p '{"spec":{"template":{"spec":{"serviceAccount":"default"}}}}'
+
+
+7) Verify the integration:
+kubectl get pods
+
+Note: Replace <acrName>, <rgName>, <aksClusterName>, <appId>, and <password> with your specific values
+
+jenkins@ubuntu:~$ az ad sp create-for-rbac --skip-assignment
+Option '--skip-assignment' has been deprecated and will be removed in a future release.
+The output includes credentials that you must protect. Be sure that you do not include these credentials in your code or check the credentials into your source control. For more information, see https://aka.ms/azadsp-cli
+{
+  "appId": "8bcfcc87-91b6-4e57-8093-7dc8930e478f",
+  "displayName": "azure-cli-2023-02-05-17-46-30",
+  "password": "O7l8Q~wKkYNQmjbzHJVJHD1MnsIjFw48mGQzQc2Q",
+  "tenant": "ce07a444-1093-47fa-ad63-63e12635c01d"
+}
+
+
+
+jenkins@ubuntu:~$ az aks create --resource-group $RESOURCE_GROUP --name $AKS_CLUSTER --node-count 1 --generate-ssh-keys --service-principal 8bcfcc87-91b6-4e57-8093-7dc8930e478f --client-secret O7l8Q~wKkYNQmjbzHJVJHD1MnsIjFw48mGQzQc2Q
+{
+  "aadProfile": null,
+  "addonProfiles": null,
+  "agentPoolProfiles": [
+    {
+      "availabilityZones": null,
+      "count": 1,
+      "creationData": null,
+      "currentOrchestratorVersion": "1.24.9",
+      "enableAutoScaling": false,
+      "enableEncryptionAtHost": false,
+      "enableFips": false,
+      "enableNodePublicIp": false,
+      "enableUltraSsd": false,
+      "gpuInstanceProfile": null,
+      "hostGroupId": null,
+      "kubeletConfig": null,
+      "kubeletDiskType": "OS",
+      "linuxOsConfig": null,
+      "maxCount": null,
+      "maxPods": 110,
+      "minCount": null,
+      "mode": "System",
+      "name": "nodepool1",
+      "nodeImageVersion": "AKSUbuntu-1804gen2containerd-2023.01.20",
+      "nodeLabels": null,
+      "nodePublicIpPrefixId": null,
+      "nodeTaints": null,
+      "orchestratorVersion": "1.24.9",
+      "osDiskSizeGb": 128,
+      "osDiskType": "Managed",
+      "osSku": "Ubuntu",
+      "osType": "Linux",
+      "podSubnetId": null,
+      "powerState": {
+        "code": "Running"
+      },
+      "provisioningState": "Succeeded",
+      "proximityPlacementGroupId": null,
+      "scaleDownMode": null,
+      "scaleSetEvictionPolicy": null,
+      "scaleSetPriority": null,
+      "spotMaxPrice": null,
+      "tags": null,
+      "type": "VirtualMachineScaleSets",
+      "upgradeSettings": {
+        "maxSurge": null
+      },
+      "vmSize": "Standard_DS2_v2",
+      "vnetSubnetId": null,
+      "workloadRuntime": null
+    }
+  ],
+  "apiServerAccessProfile": null,
+  "autoScalerProfile": null,
+  "autoUpgradeProfile": null,
+  "azurePortalFqdn": "gradle-clu-gradle-demo-ce26c3-e3c2c4ac.portal.hcp.koreacentral.azmk8s.io",
+  "currentKubernetesVersion": "1.24.9",
+  "disableLocalAccounts": false,
+  "diskEncryptionSetId": null,
+  "dnsPrefix": "gradle-clu-gradle-demo-ce26c3",
+  "enablePodSecurityPolicy": null,
+  "enableRbac": true,
+  "extendedLocation": null,
+  "fqdn": "gradle-clu-gradle-demo-ce26c3-e3c2c4ac.hcp.koreacentral.azmk8s.io",
+  "fqdnSubdomain": null,
+  "httpProxyConfig": null,
+  "id": "/subscriptions/ce26c328-ebeb-4568-b91c-7d100e525c92/resourcegroups/gradle-demo/providers/Microsoft.ContainerService/managedClusters/gradle-cluster",
+  "identity": null,
+  "identityProfile": null,
+  "kubernetesVersion": "1.24.9",
+  "linuxProfile": {
+    "adminUsername": "azureuser",
+    "ssh": {
+      "publicKeys": [
+        {
+          "keyData": "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC0rDygFXrZsW1Q1ENeLkJnjzgFRG+WXtKLkKEaBp5Jc7gFYi2fsUbgJZDZ/CHQMtvtLDcimwpPw/QN/wFZq4U3+wq8hZznXpE+rmrkPTbEyhPN0JWtS3jE4OmzNt27fMJ1xDKWqj3dN9rBg7+drFv8wVyGlbfEj1rZstr+7+e3/IPcd3YhS6CamqMGOBjRHGs0xIqCzkH/FHuyjKEz9UmYNCfiCkMb1dPswmQyFYC1B34iwnaJb1W56OhCjtPHjunTy21/R940M5Ns6aO9NPoLCt4gidxkuZnHZFLIpLdnZ37nL8OQ7MrV2rR2y8PhBteQ0Djmefnn6sKnldFD/vUdXaGcaNPmTlfTURSeGSsk7i2O/+MWemac5xU1Tqxbv9yhvCs8NBUEcOL7HpqYgyQym6NhfCJ8btfuKx/XBh2NHnzxMOy10Yarn5kyiXDUXeh37gAwech6nkaxC8n/LFYWoYSaDlSAuWA3MXnoomWUgE1UVWDgdh4uqVP++NSQKQU= jenkins@ubuntu\n"
+        }
+      ]
+    }
+  },
+  "location": "koreacentral",
+  "maxAgentPools": 100,
+  "name": "gradle-cluster",
+  "networkProfile": {
+    "dnsServiceIp": "10.0.0.10",
+    "dockerBridgeCidr": "172.17.0.1/16",
+    "ipFamilies": [
+      "IPv4"
+    ],
+    "loadBalancerProfile": {
+      "allocatedOutboundPorts": null,
+      "effectiveOutboundIPs": [
+        {
+          "id": "/subscriptions/ce26c328-ebeb-4568-b91c-7d100e525c92/resourceGroups/MC_gradle-demo_gradle-cluster_koreacentral/providers/Microsoft.Network/publicIPAddresses/5f4af0e7-8184-4bdf-9b46-08d0bf9cdf2e",
+          "resourceGroup": "MC_gradle-demo_gradle-cluster_koreacentral"
+        }
+      ],
+      "enableMultipleStandardLoadBalancers": null,
+      "idleTimeoutInMinutes": null,
+      "managedOutboundIPs": {
+        "count": 1,
+        "countIpv6": null
+      },
+      "outboundIPs": null,
+      "outboundIpPrefixes": null
+    },
+    "loadBalancerSku": "Standard",
+    "natGatewayProfile": null,
+    "networkMode": null,
+    "networkPlugin": "kubenet",
+    "networkPolicy": null,
+    "outboundType": "loadBalancer",
+    "podCidr": "10.244.0.0/16",
+    "podCidrs": [
+      "10.244.0.0/16"
+    ],
+    "serviceCidr": "10.0.0.0/16",
+    "serviceCidrs": [
+      "10.0.0.0/16"
+    ]
+  },
+  "nodeResourceGroup": "MC_gradle-demo_gradle-cluster_koreacentral",
+  "oidcIssuerProfile": {
+    "enabled": false,
+    "issuerUrl": null
+  },
+  "podIdentityProfile": null,
+  "powerState": {
+    "code": "Running"
+  },
+  "privateFqdn": null,
+  "privateLinkResources": null,
+  "provisioningState": "Succeeded",
+  "publicNetworkAccess": null,
+  "resourceGroup": "gradle-demo",
+  "securityProfile": {
+    "azureKeyVaultKms": null,
+    "defender": null
+  },
+  "servicePrincipalProfile": {
+    "clientId": "8bcfcc87-91b6-4e57-8093-7dc8930e478f",
+    "secret": null
+  },
+  "sku": {
+    "name": "Basic",
+    "tier": "Free"
+  },
+  "storageProfile": {
+    "blobCsiDriver": null,
+    "diskCsiDriver": {
+      "enabled": true
+    },
+    "fileCsiDriver": {
+      "enabled": true
+    },
+    "snapshotController": {
+      "enabled": true
+    }
+  },
+  "systemData": null,
+  "tags": null,
+  "type": "Microsoft.ContainerService/ManagedClusters",
+  "windowsProfile": null,
+  "workloadAutoScalerProfile": {
+    "keda": null
+  }
+}
+jenkins@ubuntu:~$ 
