@@ -2,8 +2,8 @@ FROM openjdk:17-alpine
 
 MAINTAINER CaNV
 
-COPY build/libs/gradle-demo-0.0.1-SNAPSHOT.jar grade-demo.jar
+COPY build/libs/github-gradle-demo-0.0.1-SNAPSHOT.jar grade-demo.jar
 
-EXPOSE 8081
+EXPOSE 8080
 
-ENTRYPOINT [ "java", -"jar", "/grade-demo.jar" ]
+ENTRYPOINT [ "java", "-jar", "/grade-demo.jar" ]

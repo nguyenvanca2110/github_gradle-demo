@@ -65,11 +65,9 @@ pipeline{
 
 	post {
 		always {
-			sh 'docker images'
 			sh 'docker image prune -f --filter="dangling=true"'
 			sh 'docker rmi -f $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER'
 			sh 'docker images'
-			sh 'docker logout'
 		}
 	}
 
