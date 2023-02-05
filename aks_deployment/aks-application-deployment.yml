@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: gradle-demo-container
-        image: gradleappacr.azurecr.io/gradle_app:10
+        image: gradleappacr.azurecr.io/gradle_app:11
         imagePullPolicy: "Always"
         resources:
           requests:
