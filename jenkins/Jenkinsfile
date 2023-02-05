@@ -9,8 +9,8 @@ pipeline{
 
 	environment {
 		ACR_CREDENTIALS=credentials('KAKASHI_AZURE_ACR')
-		ACR_GRADLE_DEMO_URL = "gradleappacr.azurecr.io"
-		ACR_GRADLE_DEMO = "gradleappacr"
+		ACR_GRADLE_DEMO_URL = "gradlecanvacr.azurecr.io"
+		ACR_GRADLE_DEMO = "gradlecanvacr"
 		APPLICATION_NAME = "gradle_app"
 		//COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short=4 HEAD').trim()
         //BRANCH = "${env.GIT_BRANCH}"
