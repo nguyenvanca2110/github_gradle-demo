@@ -4,7 +4,7 @@
 az login
 
 export RESOURCE_GROUP='gradle-demo'
-export AKS_CLUSTER='gradlecluster'
+export AKS_CLUSTER='ssh-gradlecluster'
 export ACR_NAME='gradleappacr'
 export ACR_URL='gradleappacr.azurecr.io'
 
