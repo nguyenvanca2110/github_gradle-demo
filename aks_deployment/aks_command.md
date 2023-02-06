@@ -24,8 +24,6 @@ az aks update -n $AKS_CLUSTER -g $RESOURCE_GROUP --attach-acr $ACR_NAME
 # Attach using acr-resource-id
 az aks update -n $AKS_CLUSTER -g $RESOURCE_GROUP --attach-acr <acr-resource-id>
 
-
-
 #  Get the credentials of AKS in local to mange the AKS Cluster 
 az aks get-credentials --resource-group=<RGNAME> --name=<AKSCLUSTERNAME>
 
