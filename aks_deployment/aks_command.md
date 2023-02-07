@@ -4,9 +4,9 @@
 az login
 
 export RESOURCE_GROUP='gradle-demo'
-export AKS_CLUSTER='gradle-cluster'
-export ACR_NAME='gradleappacr'
-export ACR_URL='gradleappacr.azurecr.io'
+export AKS_CLUSTER='gradle-canv'
+export ACR_NAME='gradlecanvacr'
+export ACR_URL='gradlecanvacr.azurecr.io'
 
 echo $AKS_NAMESPACE
 
