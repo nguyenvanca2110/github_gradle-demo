@@ -13,6 +13,7 @@ pipeline{
 		ACR_GRADLE_DEMO = "gradlecanvacr"
 		APPLICATION_NAME = "gradle_app"
 		COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+		NAME_SPACE = "gradle-namespace"
         //BRANCH = "${env.GIT_BRANCH}"
         //TAG = "${env.BRANCH}.${env.BUILD_NUMBER}".drop(15)
         //DEV_TAG = "${env.BRANCH}.${env.BUILD_NUMBER}".drop(7)
@@ -57,7 +58,7 @@ pipeline{
                         sh ('kubectl apply -f aks_deployment/aks-namespace.yml')
                         sh ('kubectl apply -f aks_deployment/aks-service-deployment.yml')
                         //sh ('kubectl apply -f aks_deployment/aks-application-deployment.yml')
-                        sh ('kubectl set image deployment/gradle-demo-app gradle-demo-container=$ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$COMMIT_HASH --namespace gradle-namespace')
+                        sh ('kubectl set image deployment/gradle-demo-app gradle-demo-container=$ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$COMMIT_HASH --namespace $NAME_SPACE')
                     //}
                 }
             }
