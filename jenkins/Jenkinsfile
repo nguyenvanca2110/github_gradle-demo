@@ -31,6 +31,15 @@ pipeline{
         	}
         }
 
+		stage('Get Short Commit Hash') {
+			steps {
+				sh '''
+				COMMIT_HASH=$(git rev-parse --short HEAD) 
+				echo "The short commit hash is: ${COMMIT_HASH}"
+				'''
+			}
+		}
+
         stage('Docker build image') {
             steps {
                 sh 'docker build -t $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER .'

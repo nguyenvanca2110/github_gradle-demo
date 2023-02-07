@@ -164,8 +164,8 @@ echo $ACR_NAME
 echo $ACR_URL
 
 
-1) Create an ACR instance:
-az acr create --name $ACR_NAME --resource-group $RESOURCE_GROUP --sku Basic
+1) Login to Azure 
+az login 
 
 /*
 jenkins@ubuntu:~$ az login
@@ -186,6 +186,7 @@ To sign in, use a web browser to open the page https://microsoft.com/devicelogin
     }
   }
 ]
+
 2) Create an ACR 
 jenkins@ubuntu:~$ az acr create --name $ACR_NAME --resource-group $RESOURCE_GROUP --sku Basic
 {
