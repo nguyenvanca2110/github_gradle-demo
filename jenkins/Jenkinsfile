@@ -12,7 +12,7 @@ pipeline{
 		ACR_GRADLE_DEMO_URL = "gradlecanvacr.azurecr.io"
 		ACR_GRADLE_DEMO = "gradlecanvacr"
 		APPLICATION_NAME = "gradle_app"
-		//COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short=4 HEAD').trim()
+		COMMIT_HASH = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
         //BRANCH = "${env.GIT_BRANCH}"
         //TAG = "${env.BRANCH}.${env.BUILD_NUMBER}".drop(15)
         //DEV_TAG = "${env.BRANCH}.${env.BUILD_NUMBER}".drop(7)
@@ -31,18 +31,9 @@ pipeline{
         	}
         }
 
-		stage('Get Short Commit Hash') {
-			steps {
-				sh '''
-				COMMIT_HASH=$(git rev-parse --short HEAD) 
-				echo "The short commit hash is: ${COMMIT_HASH}"
-				'''
-			}
-		}
-
         stage('Docker build image') {
             steps {
-                sh 'docker build -t $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER .'
+                sh 'docker build -t $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$COMMIT_HASH .'
         	}
         }
 
@@ -55,7 +46,7 @@ pipeline{
 
 		stage('Docker Image Push') {
 			steps {
-				sh 'docker push $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER'
+				sh 'docker push $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$COMMIT_HASH'
 			}
 		}
 
@@ -66,7 +57,7 @@ pipeline{
                         sh ('kubectl apply -f aks_deployment/aks-namespace.yml')
                         sh ('kubectl apply -f aks_deployment/aks-service-deployment.yml')
                         //sh ('kubectl apply -f aks_deployment/aks-application-deployment.yml')
-                        sh ('kubectl set image deployment/gradle-demo-app gradle-demo-container=$ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER --namespace gradle-namespace')
+                        sh ('kubectl set image deployment/gradle-demo-app gradle-demo-container=$ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$COMMIT_HASH --namespace gradle-namespace')
                     //}
                 }
             }
@@ -76,7 +67,7 @@ pipeline{
 	post {
 		always {
 			sh 'docker image prune -f --filter="dangling=true"'
-			sh 'docker rmi -f $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$BUILD_NUMBER'
+			sh 'docker rmi -f $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$COMMIT_HASH'
 			sh 'docker images'
 		}
 	}
