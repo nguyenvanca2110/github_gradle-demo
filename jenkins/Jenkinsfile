@@ -70,7 +70,9 @@ pipeline{
 			sh 'docker image prune -f --filter="dangling=true"'
 			sh 'docker rmi -f $ACR_GRADLE_DEMO_URL/$APPLICATION_NAME:$COMMIT_HASH'
 			sh 'docker images'
+			sh 'docker ps ' // Check merge
 		}
 	}
+
 
 }
